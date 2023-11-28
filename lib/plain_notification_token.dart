@@ -46,6 +46,12 @@ class PlainNotificationToken {
   Stream<IosNotificationSettings> get onIosSettingsRegistered =>
       _iosSettingsStreamController.stream;
 
+  final StreamController<String> _notificationMessageStreamController =
+  StreamController<String>.broadcast();
+
+  Stream<String> get onReceiveNotificationMessage =>
+      _notificationMessageStreamController.stream;
+
   /// On iOS, prompts the user for notification permissions the first time it is called.
   ///
   /// Does nothing on Android.
@@ -65,6 +71,9 @@ class PlainNotificationToken {
       case "onIosSettingsRegistered":
         _iosSettingsStreamController.add(IosNotificationSettings._fromMap(
             call.arguments.cast<String, bool>()));
+        return null;
+      case "onReceiveNotificationMessage":
+        _notificationMessageStreamController.add(call.arguments);
         return null;
     }
   }
